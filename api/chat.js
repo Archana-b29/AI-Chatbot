@@ -41,13 +41,14 @@ export default async function handler(req, res) {
     // ✅ OpenAI API setup
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // ✅ Model request
+    // ✅ Model request using free GPT-3.5-turbo
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // more reliable model name
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are Sunny, a cheerful kindergarten chatbot. Speak in short, happy sentences with emojis sometimes.",
+          content:
+            "You are Sunny, a cheerful kindergarten chatbot. Speak in short, happy sentences with emojis sometimes.",
         },
         { role: "user", content: message },
       ],
@@ -55,10 +56,11 @@ export default async function handler(req, res) {
       temperature: 0.8,
     });
 
-    const reply = completion.choices?.[0]?.message?.content ?? "I couldn’t think of anything right now 🌞";
+    const reply =
+      completion.choices?.[0]?.message?.content ??
+      "I couldn’t think of anything right now 🌞";
     console.log("✅ GPT reply ok");
     return res.status(200).json({ reply });
-
   } catch (err) {
     console.error("❌ Chat error →", err);
     res.status(500).json({ error: err.message || "Something went wrong!" });
